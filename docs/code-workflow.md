@@ -10,6 +10,16 @@ graph TD
     D -->|Execute| E[Specific Instruction Handler]
     E -->|Update| F[Program State]
     F -->|Return| G[Transaction Result]
+
+    subgraph Security Checks
+        H[Signer Verification]
+        I[Account Validation]
+        J[Parameter Checks]
+    end
+
+    B --> H
+    B --> I
+    B --> J
 ```
 
 ## 2. Instruction Processing Flow
@@ -23,13 +33,19 @@ sequenceDiagram
     participant Processor
     participant State
     participant TokenProgram
+    participant SystemProgram
 
     Client->>Entrypoint: Initialize Pool Request
     Entrypoint->>Processor: Route to process_initialize_pool
+    Processor->>SystemProgram: Create Pool Account
     Processor->>State: Create PoolState
     Processor->>TokenProgram: Initialize LP Token Mint
     State->>State: Set initialized=true
-    Processor->>Client: Return Result
+    Processor-->>Client: Return Result
+
+    Note over Processor: Validate Parameters
+    Note over State: Check Account Size
+    Note over TokenProgram: Verify Mint Authority
 ```
 
 ### Swap Operation
@@ -41,27 +57,94 @@ sequenceDiagram
     participant State
     participant Math
     participant TokenProgram
+    participant SystemProgram
 
     User->>Processor: Swap Request
     Processor->>State: Load Pool State
-    Processor->>Math: Calculate Swap Amount
-    Math->>Math: Apply Fees
-    Math->>Math: Check Slippage
-    Processor->>TokenProgram: Transfer Tokens
+    
+    alt SOL to Token
+        Processor->>SystemProgram: Transfer SOL
+        Processor->>Math: Calculate Token Amount
+        Math->>Math: Apply Fees
+        Math->>Math: Check Slippage
+        Processor->>TokenProgram: Transfer Tokens
+    else Token to SOL
+        Processor->>TokenProgram: Transfer Tokens
+        Processor->>Math: Calculate SOL Amount
+        Math->>Math: Apply Fees
+        Math->>Math: Check Slippage
+        Processor->>SystemProgram: Transfer SOL
+    end
+
     Processor->>State: Update Reserves
-    State->>User: Return Result
+    State-->>User: Return Result
+
+    Note over Math: Constant Product Formula
+    Note over Processor: Slippage Protection
+```
+
+### Liquidity Operations
+
+```mermaid
+sequenceDiagram
+    participant LP as Liquidity Provider
+    participant Processor
+    participant State
+    participant Math
+    participant TokenProgram
+    participant SystemProgram
+
+    LP->>Processor: Add/Remove Liquidity Request
+    
+    alt Add Liquidity
+        Processor->>SystemProgram: Transfer SOL
+        Processor->>TokenProgram: Transfer Tokens
+        Processor->>Math: Calculate LP Tokens
+        Processor->>TokenProgram: Mint LP Tokens
+    else Remove Liquidity
+        Processor->>TokenProgram: Burn LP Tokens
+        Processor->>Math: Calculate Returns
+        Processor->>SystemProgram: Return SOL
+        Processor->>TokenProgram: Return Tokens
+    end
+
+    Processor->>State: Update Pool State
+    State-->>LP: Return Result
+
+    Note over Math: Proportional Distribution
+    Note over Processor: Minimum Amount Checks
 ```
 
 ## 3. Component Interaction Map
 
 ```mermaid
-graph LR
-    A[lib.rs] -->|Entry Point| B[processor.rs]
-    B -->|Define Instructions| C[instruction.rs]
-    B -->|Manage State| D[state.rs]
-    B -->|Handle Errors| E[error.rs]
-    D -->|Serialize/Deserialize| F[Borsh]
-    B -->|Token Operations| G[SPL Token Program]
+graph TB
+    subgraph Client Layer
+        A[JavaScript/TypeScript Client]
+        B[Transaction Builder]
+    end
+
+    subgraph Program Layer
+        C[lib.rs - Entrypoint]
+        D[processor.rs - Logic]
+        E[instruction.rs - Commands]
+        F[state.rs - Data]
+        G[error.rs - Handling]
+    end
+
+    subgraph External
+        H[SPL Token Program]
+        I[System Program]
+    end
+
+    A -->|Build| B
+    B -->|Submit| C
+    C -->|Route| D
+    D -->|Use| E
+    D -->|Manage| F
+    D -->|Handle| G
+    D -->|Interact| H
+    D -->|Interact| I
 ```
 
 ## 4. Detailed Code Flow
