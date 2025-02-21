@@ -2,5 +2,24 @@
 name = "simple-token-exchange"
 version = "0.1.0"
 edition = "2021"
+description = "A simple token exchange program on Solana"
+
+[features]
+no-entrypoint = []
 
 [dependencies]
+solana-program = "=1.16.18"
+thiserror = "1.0"
+spl-token = { version = "=3.5.0", features = ["no-entrypoint"] }
+arrayref = "0.3.7"
+num-derive = "0.3"
+num-traits = "0.2"
+borsh = "0.10.3"
+borsh-derive = "0.10.3"
+
+[dev-dependencies]
+solana-program-test = "=1.16.18"
+solana-sdk = "=1.16.18"
+
+[lib]
+crate-type = ["cdylib", "lib"]

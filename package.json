@@ -1,0 +1,29 @@
+{
+  "name": "simple-token-exchange",
+  "version": "1.0.0",
+  "description": "A Solana program that implements a basic token exchange (DEX) allowing users to swap between SOL and SPL tokens using the constant product formula (x * y = k).",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github-twannasleep:twannasleep/simple-token-exchange.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@solana/spl-token": "^0.4.12",
+    "@solana/web3.js": "^1.98.0",
+    "@types/bn.js": "^5.1.6",
+    "@types/node": "^22.13.4",
+    "bn.js": "^5.2.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  }
+}
