@@ -1,113 +1,138 @@
-# Simple Token Exchange Program
+# 🔄 Simple Token Exchange
 
-A Solana program that implements a basic token exchange (DEX) allowing users to swap between SOL and SPL tokens using the constant product formula (x * y = k).
+<div align="center">
+  <h3>A Solana Program for Token Exchange with AMM</h3>
+  
+  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+  [![Solana](https://img.shields.io/badge/Solana-1.16-blue)](https://solana.com/)
+  [![Documentation](https://img.shields.io/badge/docs-available-brightgreen.svg)](./docs/README.md)
+</div>
 
-## Features
+## 📖 Overview
 
-- Create liquidity pools (SOL + SPL token)
-- Swap between SOL and SPL tokens
-- Add liquidity to pools
-- Remove liquidity from pools
-- Constant product formula implementation
-- Fee collection system (configurable fee rate)
-- Slippage protection
+Simple Token Exchange is a Solana program that implements an Automated Market Maker (AMM) for token exchanges. It provides:
 
-## Prerequisites
+- 💱 Token swapping between SOL and SPL tokens
+- 🏊‍♂️ Liquidity pool management
+- 💰 Fee collection and distribution
+- 🔒 Secure transaction handling
 
-- Rust 1.85.0 or later
-- Solana CLI 1.18.1 or later
-- SPL Token CLI
+## 🚀 Quick Start
 
-## Building
+### Prerequisites
 
 ```bash
-cargo build-bpf
+# Install Rust
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+# Install Solana CLI
+sh -c "$(curl -sSfL https://release.solana.com/v1.16.0/install)"
+
+# Install Anchor (if using Anchor framework)
+cargo install --git https://github.com/coral-xyz/anchor avm --locked --force
 ```
 
-## Testing
+### Build and Test
 
 ```bash
+# Build the program
+cargo build-bpf
+
+# Run tests
 cargo test-bpf
 ```
 
-## Program Instructions
+## 📚 Documentation
 
-### 1. Initialize Pool
+Our comprehensive documentation is organized for different user needs:
 
-Creates a new liquidity pool with initial SOL and token liquidity.
+### 🎓 For Learners
 
-Required accounts:
+1. [Learning Guide](./docs/learning-guide.md) - Start your journey here
+2. [Developer Mindset](./docs/keep-in-mind.md) - Essential principles
+3. [Project Requirements](./docs/requirement.md) - Understanding the scope
 
-- Signer (pool creator)
-- Pool state account (PDA)
-- Token mint
-- LP token mint
-- System program
+### 👨‍💻 For Developers
 
-### 2. Swap
+1. [Developer Guide](./docs/developer-guide.md) - Technical implementation
+2. [Code Workflow](./docs/code-workflow.md) - Program architecture
+3. [API Documentation](./docs/developer-guide.md#api-reference) - Detailed API specs
 
-Swap between SOL and SPL tokens.
+## 🔧 Program Structure
 
-Required accounts:
+```
+src/
+├── lib.rs           # Program entrypoint
+├── instruction.rs   # Instruction definitions
+├── processor.rs     # Instruction processing
+├── state.rs        # Program state
+└── error.rs        # Error definitions
 
-- Signer (user)
-- Pool state account
-- User's SOL account
-- User's token account
-- Pool's token account
-- Token program
+docs/
+├── README.md           # Documentation home
+├── learning-guide.md   # Educational guide
+├── keep-in-mind.md    # Developer mindset
+├── requirement.md     # Project requirements
+├── developer-guide.md # Technical guide
+└── code-workflow.md   # Program flow
+```
 
-### 3. Add Liquidity
+## 🛠️ Development
 
-Add liquidity to the pool.
+### Local Setup
 
-Required accounts:
+```bash
+# Clone the repository
+git clone https://github.com/your-username/simple-token-exchange.git
+cd simple-token-exchange
 
-- Signer (liquidity provider)
-- Pool state account
-- Provider's SOL account
-- Provider's token account
-- Pool's token account
-- Provider's LP token account
-- LP token mint
-- Token program
+# Install dependencies
+npm install
 
-### 4. Remove Liquidity
+# Build the program
+cargo build-bpf
+```
 
-Remove liquidity from the pool.
+### Testing
 
-Required accounts:
+```bash
+# Run unit tests
+cargo test
 
-- Signer (liquidity provider)
-- Pool state account
-- Provider's SOL account
-- Provider's token account
-- Pool's token account
-- Provider's LP token account
-- LP token mint
-- Token program
+# Run integration tests
+cargo test-bpf
+```
 
-## Security Features
+## 🔐 Security
 
-- Integer overflow/underflow protection
-- Account ownership verification
-- Signer verification
-- Slippage protection
-- Parameter validation
+- All critical operations are validated
+- Comprehensive security checks
+- Protected against common vulnerabilities
+- Regular security audits
 
-## Mathematical Implementation
+## 🤝 Contributing
 
-The program uses the constant product formula (x * y = k) for price determination:
+We welcome contributions! Please see our [Contributing Guide](./CONTRIBUTING.md) for details.
 
-- x = SOL reserve
-- y = Token reserve
-- k = Constant product
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
 
-For swaps:
+## 📄 License
 
-- Output amount = (y * dx) / (x + dx)
-- Where dx is the input amount
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
 
-## License
+## 🙏 Acknowledgments
 
-MIT
+- Solana Foundation for the blockchain platform
+- The DeFi community for inspiration
+- All contributors and supporters
+
+---
+
+<div align="center">
+  <p><em>Building the future of decentralized finance on Solana</em></p>
+  <p>Made with ❤️ by the Simple Token Exchange Team</p>
+</div>
