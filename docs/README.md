@@ -7,6 +7,7 @@ Welcome to the comprehensive documentation for the Simple Token Exchange Program
 | Document | Description | Primary Use |
 |----------|-------------|-------------|
 | [📖 Learning Guide](./learning-guide.md) | Educational walkthrough and core concepts | For beginners starting out |
+| [🧠 Developer Mindset](./keep-in-mind.md) | Essential principles and thinking patterns | For developing right mindset |
 | [📋 Requirements](./requirement.md) | Project specifications and objectives | For understanding project scope |
 | [👨‍💻 Developer Guide](./developer-guide.md) | Technical documentation and implementation | For developers |
 | [🔄 Code Workflow](./code-workflow.md) | Program flows and interactions | For understanding system design |

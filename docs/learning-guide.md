@@ -13,10 +13,11 @@
 2. [Core Concepts](#core-concepts)
 3. [Key Components](#key-components)
 4. [Study Guide](#study-guide)
-5. [Hands-on Exercises](#hands-on-exercises)
-6. [Resources](#resources)
-7. [Advanced Topics](#advanced-topics)
-8. [Learning Checklist](#learning-checklist)
+5. [Developer Mindset](#developer-mindset)
+6. [Hands-on Exercises](#hands-on-exercises)
+7. [Resources](#resources)
+8. [Advanced Topics](#advanced-topics)
+9. [Learning Checklist](#learning-checklist)
 
 ---
 
@@ -33,6 +34,8 @@ struct Prerequisites {
     defi_fundamentals: ["Liquidity pools", "Token standards", "Price discovery"]
 }
 ```
+
+> 🧠 **Important**: Before proceeding, review our [Developer Mindset Guide](./keep-in-mind.md) to understand the essential thinking patterns and principles for Solana development.
 
 ## 🧠 Core Concepts
 
@@ -116,6 +119,25 @@ graph TD
    - Account data structures
    - Serialization patterns
    - State transitions
+
+## 🧠 Developer Mindset
+
+Understanding the right mindset is crucial for Solana development. Our [Developer Mindset Guide](./keep-in-mind.md) covers:
+
+- 🎯 Core principles of Solana development
+- 🔒 Security-first thinking
+- 🚀 Performance considerations
+- ⚠️ Common pitfalls to avoid
+- ✨ Best practices to follow
+
+Before diving into implementation, make sure to:
+
+1. Study the account model thoroughly
+2. Understand stateless program execution
+3. Develop a security-focused mindset
+4. Learn about performance constraints
+
+> 💡 **Tip**: Keep the [Developer Mindset Guide](./keep-in-mind.md) handy as you progress through this learning guide.
 
 ## 🛠️ Hands-on Exercises
 
