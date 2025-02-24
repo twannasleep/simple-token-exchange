@@ -1,290 +1,279 @@
 # 🔄 Simple Token Exchange Program Requirements
 
-Owner: Tuan Bui Thanh
+<div align="center">
+  <h3>Technical Specification and Implementation Guide</h3>
+  <p><em>A comprehensive DEX implementation on Solana blockchain</em></p>
+  
+  [![Owner](https://img.shields.io/badge/Owner-Tuan%20Bui%20Thanh-blue)](https://github.com/unichdonki)
+  [![Status](https://img.shields.io/badge/Status-In%20Development-yellow)](https://github.com/unichdonki/simple-token-exchange)
+</div>
+
+---
+
+## 📋 Table of Contents
+
+- [Project Overview](#-project-overview)
+- [Core Features](#-core-features)
+- [Technical Specifications](#-technical-specifications)
+- [Learning Objectives](#-learning-objectives)
+- [Security Requirements](#-security-requirements)
+- [Testing Requirements](#-testing-requirements)
+- [Implementation Plan](#-implementation-plan)
+- [Resources & Timeline](#-resources--timeline)
+
+---
 
 ## 🎯 Project Overview
 
-A basic token exchange program on Solana that allows users to swap between SOL and SPL tokens, similar to a simplified version of popular DEXes like Serum/Orca/Raydium.
+A decentralized token exchange program built on Solana that enables:
+
+- Seamless swaps between SOL and SPL tokens
+- Automated market making using constant product formula
+- Liquidity provision and management
+- Secure and efficient token transfers
+
+<div align="center">
+
+```mermaid
+graph LR
+    A[Users] -->|Swap Tokens| B[Exchange Pool]
+    C[Liquidity Providers] -->|Add Liquidity| B
+    B -->|Returns| A
+    B -->|LP Tokens| C
+    
+    style B fill:#f9f,stroke:#333,stroke-width:2px
+```
+
+</div>
 
 ## 🌟 Core Features
 
-### 1️⃣ Token Pool Creation
+### 1. Token Pool Management
 
-- [ ]  Create liquidity pool (SOL + SPL token)
-- [ ]  Initialize pool with initial liquidity
-- [ ]  Store pool state in PDA
+| Feature | Description | Status |
+|---------|-------------|--------|
+| Pool Creation | Create SOL + SPL token liquidity pool | 🟡 Pending |
+| Initial Liquidity | Set up initial pool parameters | 🟡 Pending |
+| State Management | PDA-based pool state storage | 🟡 Pending |
 
-### 2️⃣ Basic Swap Functionality
+### 2. Swap Operations
 
-- [ ]  SOL → SPL token swaps
-- [ ]  SPL token → SOL swaps
-- [ ]  Constant product formula implementation (x * y = k)
+| Feature | Description | Status |
+|---------|-------------|--------|
+| SOL → Token | Convert SOL to SPL tokens | 🟡 Pending |
+| Token → SOL | Convert SPL tokens to SOL | 🟡 Pending |
+| Price Formula | x * y = k implementation | 🟡 Pending |
 
-### 3️⃣ Liquidity Management
+### 3. Liquidity Features
 
-- [ ]  Add liquidity functionality
-- [ ]  Remove liquidity functionality
-- [ ]  LP token tracking system
+| Feature | Description | Status |
+|---------|-------------|--------|
+| Add Liquidity | Deposit tokens to pool | 🟡 Pending |
+| Remove Liquidity | Withdraw tokens from pool | 🟡 Pending |
+| LP Tokens | Manage liquidity provider shares | 🟡 Pending |
 
 ## 💻 Technical Specifications
 
-### Account Structures
+### Account Architecture
+
+<details>
+<summary><strong>Pool State Account</strong></summary>
 
 ```rust
-// Pool State Account
-struct PoolState {
-    pub authority: Pubkey,      // Pool authority
-    pub sol_reserve: u64,       // SOL reserve
-    pub token_reserve: u64,     // Token reserve
-    pub lp_mint: Pubkey,        // LP token mint
-    pub fee_rate: u64,          // Fee rate (e.g., 0.3%)
+/// Manages the core pool state and configuration
+pub struct PoolState {
+    pub authority: Pubkey,      // Pool administrator
+    pub sol_reserve: u64,       // SOL balance
+    pub token_reserve: u64,     // SPL token balance
+    pub lp_mint: Pubkey,        // LP token mint address
+    pub fee_rate: u64,          // Fee percentage (basis points)
 }
-
-// User Position Account
-struct UserPosition {
-    pub owner: Pubkey,          // Position owner
-    pub lp_tokens: u64,         // LP token amount
-}
-
 ```
+
+</details>
+
+<details>
+<summary><strong>User Position Account</strong></summary>
+
+```rust
+/// Tracks individual LP positions
+pub struct UserPosition {
+    pub owner: Pubkey,          // LP token holder
+    pub lp_tokens: u64,         // LP token balance
+}
+```
+
+</details>
 
 ### Program Instructions
 
-### 1. Initialize Pool
+<details>
+<summary><strong>1. Pool Initialization</strong></summary>
 
 ```rust
-initialize_pool(
-    sol_amount: u64,
-    token_amount: u64,
-    fee_rate: u64,
-)
-
+/// Create and initialize a new liquidity pool
+pub fn initialize_pool(
+    ctx: Context<InitializePool>,
+    sol_amount: u64,      // Initial SOL deposit
+    token_amount: u64,    // Initial token deposit
+    fee_rate: u64,        // Fee rate in basis points
+) -> Result<()>
 ```
 
-### 2. Swap Tokens
+</details>
+
+<details>
+<summary><strong>2. Token Swaps</strong></summary>
 
 ```rust
-swap(
-    amount_in: u64,
-    minimum_amount_out: u64,
-    is_sol_input: bool,
-)
-
+/// Execute token swap operation
+pub fn swap(
+    ctx: Context<Swap>,
+    amount_in: u64,           // Input token amount
+    minimum_amount_out: u64,  // Minimum output expected
+    is_sol_input: bool,       // Swap direction flag
+) -> Result<()>
 ```
 
-### 3. Add Liquidity
+</details>
+
+<details>
+<summary><strong>3. Liquidity Management</strong></summary>
 
 ```rust
-add_liquidity(
-    sol_amount: u64,
-    token_amount: u64,
-    minimum_lp_tokens: u64,
-)
+/// Add liquidity to the pool
+pub fn add_liquidity(
+    ctx: Context<AddLiquidity>,
+    sol_amount: u64,          // SOL to deposit
+    token_amount: u64,        // Tokens to deposit
+    minimum_lp_tokens: u64,   // Minimum LP tokens expected
+) -> Result<()>
 
+/// Remove liquidity from the pool
+pub fn remove_liquidity(
+    ctx: Context<RemoveLiquidity>,
+    lp_tokens: u64,           // LP tokens to burn
+    minimum_sol: u64,         // Minimum SOL expected
+    minimum_token: u64,       // Minimum tokens expected
+) -> Result<()>
 ```
 
-### 4. Remove Liquidity
-
-```rust
-remove_liquidity(
-    lp_tokens: u64,
-    minimum_sol: u64,
-    minimum_token: u64,
-)
-
-```
+</details>
 
 ## 📚 Learning Objectives
 
 ### Core Concepts
 
-- [ ]  PDA (Program Derived Addresses) usage
-- [ ]  SPL token handling
-- [ ]  Program state management
-- [ ]  Safe token mathematics
-- [ ]  Multiple account management
-- [ ]  Native SOL transfers
-- [ ]  DeFi security principles
+<div align="center">
 
-### Mathematical Implementation
+| Concept | Description | Priority |
+|---------|-------------|----------|
+| PDAs | Program Derived Addresses usage | 🔴 High |
+| SPL Tokens | Token program integration | 🔴 High |
+| State Management | Program state handling | 🔴 High |
+| Math | Safe token calculations | 🔴 High |
+| Security | DeFi security principles | 🔴 High |
 
-### Constant Product Formula
+</div>
 
-- Basic equation: `x * y = k`
-- Trade calculation: `dy = (y * dx) / (x + dx)`
+### Mathematical Models
+
+#### Constant Product AMM
+
+<div align="center">
+
+\[ x *y = k \]
+\[ dy = \frac{y* dx}{x + dx} \]
 
 Where:
 
-- x = input reserve
-- y = output reserve
-- dx = input amount
-- dy = output amount
+- x = Input reserve
+- y = Output reserve
+- dx = Input amount
+- dy = Output amount
+
+</div>
 
 ## 🔒 Security Requirements
 
-### Essential Checks
+### Critical Checks
 
-- [ ]  Integer overflow/underflow protection
-- [ ]  Account ownership verification
-- [ ]  Parameter validation
-- [ ]  Slippage protection
-- [ ]  Signer verification
+| Check | Description | Implementation |
+|-------|-------------|----------------|
+| Overflow Protection | Prevent integer overflow/underflow | `checked_add`, `checked_mul` |
+| Account Verification | Validate account ownership | Account constraint checks |
+| Slippage Protection | Minimum output enforcement | Slippage tolerance checks |
+| Signer Verification | Validate transaction signers | Signer constraint checks |
 
 ## 🧪 Testing Requirements
 
-### Test Categories
+### Test Matrix
 
-- [ ]  Unit tests for instructions
-- [ ]  Integration tests for swap flows
-- [ ]  Edge case testing
+| Category | Description | Priority |
+|----------|-------------|----------|
+| Unit Tests | Individual instruction testing | 🔴 High |
+| Integration | End-to-end flow testing | 🔴 High |
+| Edge Cases | Boundary condition testing | 🟡 Medium |
+| Security | Vulnerability testing | 🔴 High |
 
-### Edge Cases to Test
+### Edge Cases
 
-- [ ]  Zero liquidity scenarios
-- [ ]  Minimum swap amounts
-- [ ]  Maximum swap amounts
-- [ ]  Slippage conditions
+- Zero liquidity scenarios
+- Minimum/maximum amounts
+- Fee calculation edge cases
+- Slippage boundary conditions
 
-## 🚀 Advanced Extensions
+## 📋 Implementation Plan
 
-### Optional Features
+### Phase 1: Foundation
 
-- [ ]  Price oracle integration
-- [ ]  Fee collection system
-- [ ]  Multiple token pair support
-- [ ]  Price impact protection
+- [ ] Development environment setup
+- [ ] Project structure creation
+- [ ] Basic program architecture
 
-## 📋 Implementation Checklist
+### Phase 2: Core Development
 
-### Setup Phase
+- [ ] Account structure implementation
+- [ ] Pool initialization logic
+- [ ] Basic swap functionality
+- [ ] Liquidity management
 
-- [ ]  Initialize development environment
-- [ ]  Set up project structure
-- [ ]  Create basic program structure
+### Phase 3: Security & Testing
 
-### Development Phase
+- [ ] Security measure implementation
+- [ ] Test suite development
+- [ ] Edge case handling
+- [ ] Performance optimization
 
-- [ ]  Implement account structures
-- [ ]  Create initialization logic
-- [ ]  Develop swap functionality
-- [ ]  Add liquidity management
-- [ ]  Implement security checks
+### Phase 4: Documentation
 
-### Testing Phase
+- [ ] Technical documentation
+- [ ] API documentation
+- [ ] User guides
+- [ ] Deployment guides
 
-- [ ]  Write unit tests
-- [ ]  Create integration tests
-- [ ]  Perform edge case testing
-- [ ]  Security audit
+## 📚 Resources & Timeline
 
-### Documentation Phase
+### Development Resources
 
-- [ ]  Write technical documentation
-- [ ]  Create user guide
-- [ ]  Document testing procedures
+| Resource | Purpose | Link |
+|----------|---------|------|
+| Solana Docs | Core concepts | [docs.solana.com](https://docs.solana.com/) |
+| Anchor Docs | Framework guide | [anchor-lang.com](https://www.anchor-lang.com/) |
+| SPL Token | Token standard | [spl.solana.com](https://spl.solana.com/token) |
 
-## 🔍 Resources
+### Project Timeline
 
-### Documentation
+| Week | Objectives | Deliverables |
+|------|------------|--------------|
+| 1 | Setup & Structure | Project scaffold, basic architecture |
+| 2 | Core Features | Pool creation, basic swaps |
+| 3 | Advanced Features | Liquidity management, security |
+| 4 | Testing & Docs | Test suite, documentation |
 
-- [Solana Docs](https://docs.solana.com/)
-- [Anchor Framework](https://www.anchor-lang.com/)
-- [SPL Token](https://spl.solana.com/token)
+---
 
-### Development Tools
-
-- Rust
-- Anchor Framework
-- Solana CLI
-- SPL Token Library
-
-### Testing Tools
-
-- Solana Program Test
-- Anchor Testing Framework
-- TypeScript (for client tests)
-
-## 📈 Project Timeline
-
-### Week 1
-
-- Environment setup
-- Basic program structure
-- Account structures
-
-### Week 2
-
-- Pool initialization
-- Basic swap functionality
-
-### Week 3
-
-- Liquidity management
-- Security implementations
-
-### Week 4
-
-- Testing
-- Documentation
-- Code review
-
-## 🎓 Learning Path
-
-### Prerequisites
-
-1. Basic Rust knowledge
-2. Solana fundamentals
-3. Anchor framework basics
-
-### Step-by-Step Learning
-
-1. Set up development environment
-2. Understand PDAs and accounts
-3. Implement basic functionality
-4. Add advanced features
-5. Learn testing practices
-6. Study security considerations
-
-## 🤝 Contributing Guidelines
-
-### Code Standards
-
-- Follow Rust best practices
-- Use meaningful variable names
-- Comment complex logic
-- Document public functions
-
-### Pull Request Process
-
-1. Create feature branch
-2. Implement changes
-3. Write tests
-4. Submit PR with description
-
-## 🏗️ Architecture
-
-### Program Components
-
-```
-src/
-├── lib.rs           # Program entry point
-├── state.rs         # Account structures
-├── instructions/    # Program instructions
-│   ├── init.rs
-│   ├── swap.rs
-│   └── liquidity.rs
-├── errors.rs        # Custom errors
-└── utils.rs         # Helper functions
-
-```
-
-### Client Integration
-
-```tsx
-interface SwapPool {
-    initialize(): Promise<void>;
-    swap(params: SwapParams): Promise<void>;
-    addLiquidity(params: LiquidityParams): Promise<void>;
-    removeLiquidity(params: LiquidityParams): Promise<void>;
-}
-```
+<div align="center">
+  <p><em>This is a living document and will be updated as the project evolves.</em></p>
+  <p>Last updated: February 2024</p>
+</div>
